@@ -4,3 +4,7 @@ require "bundler/setup"
 Bundler.require(:default)
 # One of our dependencies that we loaded in the previous expression was the require_all gem. It allows us to require all of the files within a directory. The path we pass to it will be relative to the root path of the project (where the Gemfile is). In our case, we're loading all of the files inside of the lib directory, so if we write code in there (like a method) it will be accessible to us after the require_all below
 require_all "lib"
+
+require "date"
+require "active_support/core_ext/integer/time"
+require "active_support/core_ext/date/calculations"
