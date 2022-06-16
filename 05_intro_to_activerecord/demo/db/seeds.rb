@@ -12,8 +12,14 @@ olivia = Dog.create(
 )
 
 # create a couple of walks and feedings for Lennon 
-
-
+lennon.walks.create(time: 2.days.ago)
+lennon.walks.create(time: 1.day.ago)
+lennon.feedings.create(time: 2.hours.ago)
+lennon.feedings.create(time: 1.hours.ago)
 
 
 # create a couple of walks and feedings for Olivia
+olivia.walks.create(time: 4.days.ago)
+olivia.walks.create(time: 3.days.ago)
+olivia.feedings.create(time: 4.hours.ago)
+olivia.feedings.create(time: 3.hours.ago)

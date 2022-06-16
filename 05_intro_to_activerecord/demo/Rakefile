@@ -1,6 +1,8 @@
 require_relative "./config/environment"
 # gives us access to active record rake tasks
 require 'sinatra/activerecord/rake'
+# in console run the command $ rake -T
+# to see all rake methods we can use
 
 desc "Open console"
 task :console do
