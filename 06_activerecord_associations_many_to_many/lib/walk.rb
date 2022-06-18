@@ -1,6 +1,7 @@
 class Walk < ActiveRecord::Base
   # ✅ Refactor associations so walks and dogs are related in a many to many way
-  belongs_to :dog
+  has_many :dog_walks
+  has_many :dogs, through: :dog_walks
 
   # ✅ add a .recent method that returns all walks in the last 4 hours
 
