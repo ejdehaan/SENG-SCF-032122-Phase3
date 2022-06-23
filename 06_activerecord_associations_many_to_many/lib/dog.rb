@@ -10,17 +10,15 @@ class Dog < ActiveRecord::Base
   # ✅ Refactor: Use AR Query methods to return hungry dogs
   # return all of the dogs who are hungry
   def self.hungry
-    self.all.filter do |dog|
-      dog.hungry?
-    end
+    recently_fed_dog_ids = self.includes(:feedings).where(feedings: {time: 4.hours.ago..Time.now}).pluck(:id)
+    self.where.not(id: recently_fed_dog_ids)
   end
   
   # ✅ Refactor: Use AR query methods to return restless dogs
   # return all of the dogs who need a walk
   def self.needs_walking
-    self.all.filter do |dog|
-      dog.needs_a_walk?
-    end
+    recently_walked_dog_ids = self.includes(:walks).where(walks: {time: 6.hours.ago..Time.now}).pluck(:id)
+    self.where.not(id: recently_walked_dog_ids)
   end
   
 
@@ -45,7 +43,7 @@ class Dog < ActiveRecord::Base
   # we want to be able to take a dog on a walk and track when they were last walked
   def walk
     now = DateTime.now
-    self.last_walked_at = now
+    # self.last_walked_at = now
     self.walks.create(time: now)
   end
 
@@ -53,16 +51,22 @@ class Dog < ActiveRecord::Base
   # we want to be able to feed a dog and track when they were last fed
   def feed
     now = DateTime.now
-    self.last_fed_at = now
+    # self.last_fed_at = now
     self.feedings.create(time: now)
   end
 
   # ✅ We'll be removing the last_walked_at and last_fed_at columns, so we'll need to add methods for those.
   
   # ✅ last_walked_at will query the related walks, order them in descending order by time and get the time of the first if it exists
+  def last_walked_at
+    self.walks.order(time: :desc).first&.time
+  end
 
   
   # ✅ last_fed_at will query the related feedings, order them in descending order by time and get the time of the first if it exists
+  def last_fed_at
+    self.feedings.order(time: :desc).first&.time
+  end
 
 
   # We want to know if a dog needs a walk. 
@@ -108,9 +112,9 @@ class Dog < ActiveRecord::Base
     if self.hungry? && self.needs_a_walk?
       "#{self.name} (hungry and in need of a walk!)".red
     elsif self.hungry?
-      "#{self.name} (hungry)".red
+      "#{self.name} (hungry)".yellow
     elsif self.needs_a_walk?
-      "#{self.name} (needs a walk)".red
+      "#{self.name} (needs a walk)".yellow
     else
       self.name.green
     end
